@@ -1,4 +1,7 @@
 #!/bin/sh
 set -eux
 
-echo OK
+black --check supa_auth examples
+ruff check supa_auth examples
+pylint supa_auth examples
+isort --check supa_auth examples

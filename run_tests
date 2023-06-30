@@ -1,4 +1,5 @@
 #!/bin/sh
 set -eux
 
-echo OK
+pytest supa_auth/tests
+PYTHONPATH=. pytest examples/localdb/tests

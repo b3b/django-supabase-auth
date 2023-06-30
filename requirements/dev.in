@@ -1,0 +1,10 @@
+-r base.in
+
+black
+isort
+pylint
+pytest
+pytest-django
+pytest-env
+pytest-mock
+ruff
