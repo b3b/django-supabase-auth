@@ -1,12 +1,23 @@
 from django.conf import settings
+from environs import Env
 
 from .fixtures import *  # noqa
+
+env = Env()
+env.read_env()
 
 
 def pytest_configure():
     settings.configure(
         DATABASES={
-            "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"},
+            "default": {
+                "ENGINE": "supa_auth",
+                "HOST": env("SUPABASE_HOST"),
+                "PASSWORD": env("SUPABASE_PASSWORD"),
+                "OPTIONS": {
+                    "sslmode": "require",
+                },
+            },
         },
         SECRET_KEY="test",
         INSTALLED_APPS=(
