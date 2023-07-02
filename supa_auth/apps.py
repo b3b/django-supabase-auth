@@ -7,3 +7,6 @@ class SupaAuthConfig(AppConfig):
 
     name = "supa_auth"
     verbose_name = "Django Supabase authentication"
+
+    def ready(self):
+        from . import signals  # NOQA pylint: disable=unused-import

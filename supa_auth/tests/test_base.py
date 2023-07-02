@@ -81,3 +81,15 @@ def test_search_path_set(db):
         cursor.execute("show search_path;")
         result = cursor.fetchone()
         assert result[0] == "django,public,auth,extensions"
+
+
+def test_migrations_table_created_in_django_schema(db):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            (
+                "select table_schema from information_schema.tables "
+                "where table_name='django_migrations';"
+            )
+        )
+        result = cursor.fetchone()
+        assert result[0] == "django"

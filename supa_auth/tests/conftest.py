@@ -26,6 +26,7 @@ def pytest_configure():
             "django.contrib.sessions",
             "django.contrib.messages",
             "rest_framework",
+            "supa_auth",
         ),
         SIMPLE_JWT={
             "JTI_CLAIM": None,
