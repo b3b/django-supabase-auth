@@ -3,3 +3,4 @@ set -eux
 
 pytest supa_auth/tests
 PYTHONPATH=. pytest examples/localdb/tests
+PYTHONPATH=. pytest examples/remotedb/tests
