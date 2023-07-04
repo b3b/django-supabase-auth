@@ -1,5 +1,10 @@
 """'supa_auth' app models."""
-# pylint: disable=abstract-method,invalid-overridden-method
+# pylint: disable=abstract-method,invalid-overridden-method,missing-docstring
+import uuid
+
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.models import TokenUser
 
 
@@ -43,3 +48,38 @@ class SupaTokenUser(TokenUser):
         from the 'app_metadata' field in the token.
         """
         return self.app_metadata.get("is_superuser", False)
+
+
+class SupabaseUserManager(UserManager):
+    """Manager for SupaUser model."""
+
+
+class SupaUser(AbstractBaseUser, PermissionsMixin):
+    """Custom user model for Supabase.
+
+    It serves as a wrapper for the original Supabase `auth.users` table.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255, blank=True, null=True, default=None)
+
+    password = models.CharField(
+        _("password"), max_length=255, db_column="encrypted_password"
+    )
+    last_login = models.DateTimeField(
+        _("last login"), blank=True, null=True, db_column="last_sign_in_at"
+    )
+    is_superuser = True
+    is_staff = True
+
+    objects = SupabaseUserManager()
+
+    USERNAME_FIELD = "id"
+    EMAIL_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    class Meta:
+        app_label = "supa_auth"
+        db_table = '"auth"."users"'
+        managed = False

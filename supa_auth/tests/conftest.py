@@ -21,6 +21,7 @@ def pytest_configure():
         },
         SECRET_KEY="test",
         INSTALLED_APPS=(
+            "django.contrib.admin",
             "django.contrib.auth",
             "django.contrib.contenttypes",
             "django.contrib.sessions",
@@ -28,6 +29,7 @@ def pytest_configure():
             "rest_framework",
             "supa_auth",
         ),
+        AUTH_USER_MODEL="supa_auth.SupaUser",
         SIMPLE_JWT={
             "JTI_CLAIM": None,
             "TOKEN_TYPE_CLAIM": None,

@@ -27,6 +27,8 @@ INSTALLED_APPS = [
     "testapp",
 ]
 
+AUTH_USER_MODEL = "supa_auth.SupaUser"
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": (

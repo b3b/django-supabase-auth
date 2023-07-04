@@ -4,7 +4,7 @@ from supa_auth.tests.factories import UserFactory
 
 
 def test_login_required_passed(db, client):
-    user = UserFactory.create(username="user", password="1234")
+    user = UserFactory.create(password="1234")
     client.force_login(user)
 
     response = client.get(reverse("django_login_required"))
