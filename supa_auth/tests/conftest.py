@@ -37,4 +37,7 @@ def pytest_configure():
             "SIGNING_KEY": "test",
             "VERIFYING_KEY": "test",
         },
+        TIME_ZONE="UTC",
+        USE_I18N=True,
+        USE_TZ=True,
     )

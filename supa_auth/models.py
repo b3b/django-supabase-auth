@@ -7,6 +7,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.models import TokenUser
 
+from . import settings as app_settings
+from .fields import BooleanAppMetadataField, IsActiveField
+
 
 class SupaTokenUser(TokenUser):
     """A class that implements the `auth.User` interface.
@@ -53,6 +56,13 @@ class SupaTokenUser(TokenUser):
 class SupabaseUserManager(UserManager):
     """Manager for SupaUser model."""
 
+    def get_queryset(self):
+        """Get the queryset for the SupaUser model
+        with field annotations defined using `FieldWithAnnotation` fields.
+        """
+        qs = super().get_queryset()
+        return qs.annotate(**self.model._field_annotations)
+
 
 class SupaUser(AbstractBaseUser, PermissionsMixin):
     """Custom user model for Supabase.
@@ -70,8 +80,30 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(
         _("last login"), blank=True, null=True, db_column="last_sign_in_at"
     )
-    is_superuser = True
-    is_staff = True
+
+    banned_until = models.DateTimeField(blank=True, null=True, default=None)
+    email_confirmed_at = models.DateTimeField(blank=True, null=True, default=None)
+    phone_confirmed_at = models.DateTimeField(blank=True, null=True, default=None)
+
+    user_metadata = models.JSONField(
+        _("user metadata"),
+        blank=True,
+        null=True,
+        db_column="raw_user_meta_data",
+        help_text=_("User-specific info. Can be modified by regular user."),
+    )
+    app_metadata = models.JSONField(
+        _("application metadata."),
+        blank=True,
+        null=True,
+        db_column="raw_app_meta_data",
+        default=lambda: dict(app_settings.DEFAULT_APP_METADATA),
+        help_text=_("Application specific metadata. Only a service role can modify."),
+    )
+
+    is_active = IsActiveField()
+    is_superuser = BooleanAppMetadataField()
+    is_staff = BooleanAppMetadataField()
 
     objects = SupabaseUserManager()
 
@@ -83,3 +115,6 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
         app_label = "supa_auth"
         db_table = '"auth"."users"'
         managed = False
+
+    def __str__(self):
+        return f"{self.email or self.phone or self.id}"
