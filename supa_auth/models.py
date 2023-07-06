@@ -71,8 +71,18 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    instance_id = models.UUIDField(
+        _("unused"), null=True, editable=False, default=app_settings.DEFAULT_INSTANCE_ID
+    )
+    aud = models.CharField(
+        max_length=255, blank=True, null=True, default=app_settings.DEFAULT_AUDIENCE
+    )
+    role = models.CharField(
+        max_length=255, blank=True, null=True, default=app_settings.DEFAULT_ROLE
+    )
     email = models.CharField(max_length=255)
     phone = models.CharField(max_length=255, blank=True, null=True, default=None)
+    is_sso_user = models.BooleanField(default=False)
 
     password = models.CharField(
         _("password"), max_length=255, db_column="encrypted_password"
@@ -82,6 +92,9 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
     )
 
     banned_until = models.DateTimeField(blank=True, null=True, default=None)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
     email_confirmed_at = models.DateTimeField(blank=True, null=True, default=None)
     phone_confirmed_at = models.DateTimeField(blank=True, null=True, default=None)
 

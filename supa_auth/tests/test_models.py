@@ -37,6 +37,13 @@ def test_user_default_fields(db):
     assert not user.is_staff
     assert not user.is_superuser
 
+    assert str(user.instance_id) == "00000000-0000-0000-0000-000000000000"
+    assert user.app_metadata == {"provider": "email", "providers": ["email"]}
+    assert user.aud == "authenticated"
+    assert user.role == "authenticated"
+    assert user.created_at
+    assert user.updated_at
+
 
 def test_user_created_from_sql(db, valid_user_from_sql):
     obj = valid_user_from_sql
