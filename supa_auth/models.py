@@ -2,7 +2,13 @@
 # pylint: disable=abstract-method,invalid-overridden-method,missing-docstring
 import uuid
 
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    Group,
+    Permission,
+    PermissionsMixin,
+    UserManager,
+)
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.models import TokenUser
@@ -51,6 +57,24 @@ class SupaTokenUser(TokenUser):
         from the 'app_metadata' field in the token.
         """
         return self.app_metadata.get("is_superuser", False)
+
+
+class UserGroup(models.Model):
+    user = models.ForeignKey("supa_auth.SupaUser", on_delete=models.CASCADE)
+    group = models.ForeignKey("auth.Group", on_delete=models.CASCADE)
+
+    class Meta:
+        app_label = "supa_auth"
+        db_table = "auth_user_groups"
+
+
+class UserPermission(models.Model):
+    user = models.ForeignKey("supa_auth.SupaUser", on_delete=models.CASCADE)
+    permission = models.ForeignKey("auth.Permission", on_delete=models.CASCADE)
+
+    class Meta:
+        app_label = "supa_auth"
+        db_table = "auth_user_permissions"
 
 
 class SupabaseUserManager(UserManager):
@@ -117,6 +141,29 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
     is_active = IsActiveField()
     is_superuser = BooleanAppMetadataField()
     is_staff = BooleanAppMetadataField()
+
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name=_("groups"),
+        blank=True,
+        help_text=_(
+            "The groups this user belongs to. A user will get all permissions "
+            "granted to each of their groups."
+        ),
+        related_name="user_set",
+        related_query_name="user",
+        through="supa_auth.UserGroup",
+    )
+
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name=_("user permissions"),
+        blank=True,
+        help_text=_("Specific permissions for this user."),
+        related_name="user_set",
+        related_query_name="user",
+        through="supa_auth.UserPermission",
+    )
 
     objects = SupabaseUserManager()
 

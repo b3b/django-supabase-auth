@@ -1,5 +1,7 @@
 # pylint: disable=no-member
 from django.contrib.auth import models as auth_models
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
 from supa_auth.models import SupaTokenUser, SupaUser
@@ -125,3 +127,26 @@ def test_user_is_active_saved(db):
 
     user = SupaUser.objects.get()
     assert not user.is_active
+
+
+def test_user_group_added(db):
+    user = SupaUser.objects.create()
+    group = auth_models.Group.objects.create(name="test-1")
+
+    user.groups.add(group)
+
+    assert SupaUser.objects.filter(groups__name="test-1").get() == user
+
+
+def test_permission_added(db):
+    user = SupaUser.objects.create(email_confirmed_at=timezone.now())
+    permission = Permission.objects.create(
+        codename="test_permission",
+        name="Test Permission",
+        content_type=ContentType.objects.get_for_model(SupaUser),
+    )
+
+    user.user_permissions.add(permission)
+
+    assert user.has_perm("supa_auth.test_permission")
+    assert user.user_permissions.filter(codename="test_permission").exists()
