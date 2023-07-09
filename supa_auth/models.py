@@ -1,7 +1,9 @@
 """'supa_auth' app models."""
-# pylint: disable=abstract-method,invalid-overridden-method,missing-docstring
+# pylint: disable=abstract-method,arguments-renamed,invalid-overridden-method
+# pylint: disable=missing-docstring
 import uuid
 
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import (
     AbstractBaseUser,
     Group,
@@ -86,6 +88,29 @@ class SupabaseUserManager(UserManager):
         """
         qs = super().get_queryset()
         return qs.annotate(**self.model._field_annotations)
+
+    def _create_user(self, email=None, phone=None, password=None, **extra_fields):
+        """A helper method to create and save a user with optional email and phone."""
+        email = self.normalize_email(email)
+        user = self.model(email=email, phone=phone, **extra_fields)
+        user.password = make_password(password)
+        return user
+
+    def create_user(self, email=None, phone=None, password=None, **extra_fields):
+        """Create a regular user"""
+        user = self._create_user(
+            email=email, phone=phone, password=password, **extra_fields
+        )
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email=None, phone=None, password=None, **extra_fields):
+        """Create a superuser."""
+        user = self._create_user(
+            email=email, phone=phone, password=password, **extra_fields
+        )
+        user.save(using=self._db)
+        return user
 
 
 class SupaUser(AbstractBaseUser, PermissionsMixin):

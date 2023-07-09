@@ -150,3 +150,50 @@ def test_permission_added(db):
 
     assert user.has_perm("supa_auth.test_permission")
     assert user.user_permissions.filter(codename="test_permission").exists()
+
+
+def test_valid_user_created_with_create_user(db):
+    user = SupaUser.objects.create_user()
+    assert user.pk
+    assert user.password
+    assert not user.check_password("")
+    assert not user.email
+    assert not user.is_staff
+    assert not user.is_superuser
+
+
+def test_user_created_with_custom_metadata(db):
+    user = SupaUser.objects.create_user(app_metadata={"providers": ["github"]})
+    assert user.app_metadata == {"providers": ["github"]}
+
+
+def test_valid_user_created_with_create_superuser(db):
+    user = SupaUser.objects.create_superuser()
+    assert user.pk
+    assert user.password
+    assert not user.check_password("")
+    assert not user.email
+    assert not user.is_staff
+    assert not user.is_superuser
+
+
+def test_check_password_valid_password(
+    db, valid_superuser_from_sql, valid_password, valid_password_hash
+):
+    assert valid_superuser_from_sql.password == valid_password_hash
+    assert valid_superuser_from_sql.check_password(valid_password)
+    assert valid_superuser_from_sql.password == valid_password_hash
+
+
+def test_password_changed(db):
+    user = SupaUser.objects.create_user(password="original")
+    assert user.check_password("original")
+    user.set_password("changed")
+    assert not user.check_password("original")
+    assert user.check_password("changed")
+
+
+def test_check_password_invalid_password(
+    db, valid_superuser_from_sql, invalid_password
+):
+    assert not valid_superuser_from_sql.check_password(invalid_password)
