@@ -30,6 +30,9 @@ def pytest_configure():
             "supa_auth",
         ),
         AUTH_USER_MODEL="supa_auth.SupaUser",
+        PASSWORD_HASHERS=[
+            "supa_auth.hashers.SupabasePasswordHasher",
+        ],
         SIMPLE_JWT={
             "JTI_CLAIM": None,
             "TOKEN_TYPE_CLAIM": None,

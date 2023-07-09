@@ -8,6 +8,8 @@ asgiref==3.7.2
     # via django
 astroid==2.15.5
     # via pylint
+bcrypt==4.0.1
+    # via -r requirements/base.in
 black==23.3.0
     # via -r requirements/dev.in
 click==8.1.3

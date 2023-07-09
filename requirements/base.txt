@@ -6,6 +6,8 @@
 #
 asgiref==3.7.2
     # via django
+bcrypt==4.0.1
+    # via -r requirements/base.in
 django==4.2.2
     # via
     #   -r requirements/base.in
