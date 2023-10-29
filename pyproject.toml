@@ -1,3 +1,75 @@
+[build-system]
+requires = ["setuptools>=64.0.0",]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django_supabase_auth"
+description = "Django Supabase authentication."
+dependencies = [
+    "django>=3.2",
+    "djangorestframework>3.10",
+    "djangorestframework-simplejwt",
+    'tomli >= 1.1.0; python_version < "3.11"',
+]
+requires-python = ">=3.7"
+readme = "README.rst"
+authors = [{name = "b3b", email = "ash.b3b@gmail.com"}]
+license = {text = "MIT"}
+dynamic = ["version"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 3.0",
+    "Framework :: Django :: 4.0",
+    "Intended Audience :: Developers",
+     "License :: OSI Approved :: MIT License",    
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Internet :: WWW/HTTP",
+]
+
+[project.urls]
+Homepage = "https://github.com/b3b/django-supabase-auth"
+Issues = "https://github.com/b3b/django-supabase-auth/issues"
+Source = "https://github.com/b3b/django-supabase-auth"
+
+[project.optional-dependencies]
+database = [
+  "bcrypt>=4.0",
+  "psycopg2-binary", 
+]
+dev = [
+  "supa_auth[database]",
+  "black>=22.3.0",
+  "environs",
+  "factory-boy",  
+  "pylint",
+  "pytest",
+  "pytest-django",
+  "pytest-env",
+  "pytest-mock",
+  "ruff",  
+  "tox",  
+  "isort",  
+]
+
+[tool.setuptools]
+license-files = ["LICENSE"]
+include-package-data = false
+
+[tool.setuptools.dynamic]
+version = {attr = "supa_auth.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["supa_auth*"]
+namespaces = false
+
 [tool.black]
 exclude = '''
 /(
