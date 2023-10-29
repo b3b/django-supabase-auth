@@ -5,6 +5,9 @@ Django Supabase authentication
 .. image:: https://img.shields.io/badge/stability-wip-lightgrey.svg
     :target: https://github.com/b3b/django-supabase-auth
     :alt: Stability
+.. image:: https://img.shields.io/pypi/v/django-supabase-auth.svg
+    :target: https://pypi.python.org/pypi/django-supabase-auth
+    :alt: Latest version on PyPi          
 .. end-badges
 
 
