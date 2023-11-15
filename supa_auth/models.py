@@ -91,7 +91,7 @@ class SupabaseUserManager(UserManager):
 
     def _create_user(self, email=None, phone=None, password=None, **extra_fields):
         """A helper method to create and save a user with optional email and phone."""
-        email = self.normalize_email(email)
+        email = self.normalize_email(email) or None
         user = self.model(email=email, phone=phone, **extra_fields)
         user.password = make_password(password)
         return user
@@ -129,7 +129,7 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(
         max_length=255, blank=True, null=True, default=app_settings.DEFAULT_ROLE
     )
-    email = models.CharField(max_length=255)
+    email = models.CharField(max_length=255, blank=True, null=True, default=None)
     phone = models.CharField(max_length=255, blank=True, null=True, default=None)
     is_sso_user = models.BooleanField(default=False)
 

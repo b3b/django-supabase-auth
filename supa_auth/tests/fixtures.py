@@ -110,7 +110,6 @@ def valid_user_from_sql(db, valid_password_hash):
         return get_user_model().objects.get(id=uid)
 
 
-# @pytes
 @pytest.fixture
 def valid_superuser_from_sql(db, valid_password_hash):
     uid = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1"

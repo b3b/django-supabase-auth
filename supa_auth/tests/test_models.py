@@ -31,8 +31,8 @@ def test_user_model_is_swapped():
 def test_user_default_fields(db):
     user = SupaUser.objects.create()
     assert user.id
-    assert not user.email
-    assert not user.phone
+    assert user.email is None
+    assert user.phone is None
     assert not user.password
     assert not user.last_login
 
@@ -157,7 +157,8 @@ def test_valid_user_created_with_create_user(db):
     assert user.pk
     assert user.password
     assert not user.check_password("")
-    assert not user.email
+    assert user.email is None
+    assert user.phone is None
     assert not user.is_staff
     assert not user.is_superuser
 
@@ -172,7 +173,8 @@ def test_valid_user_created_with_create_superuser(db):
     assert user.pk
     assert user.password
     assert not user.check_password("")
-    assert not user.email
+    assert user.email is None
+    assert user.phone is None
     assert not user.is_staff
     assert not user.is_superuser
 
