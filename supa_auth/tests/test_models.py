@@ -152,13 +152,52 @@ def test_permission_added(db):
     assert user.user_permissions.filter(codename="test_permission").exists()
 
 
-def test_valid_user_created_with_create_user(db):
+def test_inactive_user_created_with_create_user(db):
     user = SupaUser.objects.create_user()
     assert user.pk
     assert user.password
     assert not user.check_password("")
     assert user.email is None
     assert user.phone is None
+    assert not user.is_active
+    assert not user.is_staff
+    assert not user.is_superuser
+
+
+def test_active_user_with_email_created_with_create_user(db):
+    user = SupaUser.objects.create_user(email="user@xample.org")
+    assert user.pk
+    assert user.password
+    assert not user.check_password("")
+    assert user.email == "user@xample.org"
+    assert user.phone is None
+    assert user.is_active
+    assert not user.is_staff
+    assert not user.is_superuser
+
+
+def test_explicitly_inactive_user_with_email_created_with_create_user(db):
+    user = SupaUser.objects.create_user(
+        email="user@xample.org", email_confirmed_at=None
+    )
+    assert user.pk
+    assert user.password
+    assert not user.check_password("")
+    assert user.email == "user@xample.org"
+    assert user.phone is None
+    assert not user.is_active
+    assert not user.is_staff
+    assert not user.is_superuser
+
+
+def test_active_user_with_phone_created_with_create_user(db):
+    user = SupaUser.objects.create_user(phone="2-12-85-06")
+    assert user.pk
+    assert user.password
+    assert not user.check_password("")
+    assert not user.email
+    assert user.phone == "2-12-85-06"
+    assert user.is_active
     assert not user.is_staff
     assert not user.is_superuser
 
@@ -168,15 +207,16 @@ def test_user_created_with_custom_metadata(db):
     assert user.app_metadata == {"providers": ["github"]}
 
 
-def test_valid_user_created_with_create_superuser(db):
-    user = SupaUser.objects.create_superuser()
+def test_active_user_created_with_create_superuser(db):
+    user = SupaUser.objects.create_superuser(email="user@xample.org")
     assert user.pk
     assert user.password
     assert not user.check_password("")
-    assert user.email is None
+    assert user.email == "user@xample.org"
     assert user.phone is None
-    assert not user.is_staff
-    assert not user.is_superuser
+    assert user.is_active
+    assert user.is_staff
+    assert user.is_superuser
 
 
 def test_check_password_valid_password(

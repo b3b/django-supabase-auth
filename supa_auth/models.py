@@ -12,6 +12,7 @@ from django.contrib.auth.models import (
     UserManager,
 )
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.models import TokenUser
 
@@ -90,8 +91,16 @@ class SupabaseUserManager(UserManager):
         return qs.annotate(**self.model._field_annotations)
 
     def _create_user(self, email=None, phone=None, password=None, **extra_fields):
-        """A helper method to create and save a user with optional email and phone."""
+        """Helper method to create and save a user with optional email and phone fields.
+
+        If email or phone is provided, the user is marked as activated (confirmed),
+        and the corresponding confirmation timestamps are set to the current time.
+        """
         email = self.normalize_email(email) or None
+        if email:
+            extra_fields.setdefault("email_confirmed_at", timezone.now())
+        if phone:
+            extra_fields.setdefault("phone_confirmed_at", timezone.now())
         user = self.model(email=email, phone=phone, **extra_fields)
         user.password = make_password(password)
         return user
@@ -109,6 +118,8 @@ class SupabaseUserManager(UserManager):
         user = self._create_user(
             email=email, phone=phone, password=password, **extra_fields
         )
+        user.is_staff = True
+        user.is_superuser = True
         user.save(using=self._db)
         return user
 
