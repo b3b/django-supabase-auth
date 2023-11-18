@@ -1,9 +1,9 @@
 # pylint: disable=no-member
+import pytest
 from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
-import pytest
 
 from supa_auth.models import SupaTokenUser, SupaUser
 
