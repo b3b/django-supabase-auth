@@ -3,6 +3,7 @@ from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
+import pytest
 
 from supa_auth.models import SupaTokenUser, SupaUser
 
@@ -150,6 +151,37 @@ def test_permission_added(db):
 
     assert user.has_perm("supa_auth.test_permission")
     assert user.user_permissions.filter(codename="test_permission").exists()
+
+
+@pytest.mark.parametrize("username", ("test@example.org", "@"))
+def test_email_field_used_get_by_natural_key(mocker, username):
+    get = mocker.patch.object(SupaUser.objects, "get")
+    SupaUser.objects.get_by_natural_key(username)
+    get.assert_called_once_with(email=username)
+
+
+@pytest.mark.parametrize(
+    "username",
+    (
+        "0474ab7c-d8d8-41bb-87c2-b54de8647ebc",
+        "0474ab7cd8d841bb87c2b54de8647ebc",
+        "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "11111111-1111-1111-1111-111111111111",
+        "11111111111111111111111111111111",
+    ),
+)
+def test_id_field_used_get_by_natural_key(mocker, username):
+    get = mocker.patch.object(SupaUser.objects, "get")
+    SupaUser.objects.get_by_natural_key(username)
+    get.assert_called_once_with(id=username)
+
+
+@pytest.mark.parametrize("username", ("123", "1-2-3", "+9 123", "test", ""))
+def test_phone_field_used_get_by_natural_key(mocker, username):
+    get = mocker.patch.object(SupaUser.objects, "get")
+    SupaUser.objects.get_by_natural_key(username)
+    get.assert_called_once_with(phone=username)
 
 
 def test_inactive_user_created_with_create_user(db):

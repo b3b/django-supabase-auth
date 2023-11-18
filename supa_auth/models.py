@@ -123,6 +123,22 @@ class SupabaseUserManager(UserManager):
         user.save(using=self._db)
         return user
 
+    def get_by_natural_key(self, username):
+        """Retrieves a user instance using the contents of the `username`.
+        The method determines the appropriate `SupaUser` field to use
+        (email, UUID, or phone) based on the format of username.
+        """
+        if "@" in username:
+            username_field = "email"
+        else:
+            try:
+                uuid.UUID(username, version=4)
+            except ValueError:
+                username_field = "phone"
+            else:
+                username_field = "id"
+        return self.get(**{username_field: username})
+
 
 class SupaUser(AbstractBaseUser, PermissionsMixin):
     """Custom user model for Supabase.
