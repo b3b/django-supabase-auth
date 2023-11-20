@@ -1,8 +1,12 @@
+import pytest
+
 from supa_auth.tests.factories import SuperUserFactory, UserFactory
 
 
-def test_admin_login(db, client):
-    uid = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+@pytest.mark.parametrize(
+    "uid", ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
+)
+def test_admin_login(db, client, uid):
     SuperUserFactory.create(id=uid, password="1234")
 
     response = client.post("/admin/login/", {"username": uid, "password": "1234"})

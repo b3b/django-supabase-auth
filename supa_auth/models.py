@@ -146,7 +146,16 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
     It serves as a wrapper for the original Supabase `auth.users` table.
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(
+        _("identifier"),
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    # Change the maximum length, which is fixed for the UUID field to 32 characters.
+    # This impacts the default length of the text widget representing the field.
+    id.max_length = 255
+
     instance_id = models.UUIDField(
         _("unused"), null=True, editable=False, default=app_settings.DEFAULT_INSTANCE_ID
     )
@@ -221,7 +230,7 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "id"
     EMAIL_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ["email"]
 
     class Meta:
         app_label = "supa_auth"
