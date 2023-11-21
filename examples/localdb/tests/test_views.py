@@ -46,3 +46,8 @@ def test_expired_token_rejected(client, expired_access_token):
 def test_anonymous_token_rejected(client, anonymous_access_token):
     response = perform_authenticated_reqest(client, anonymous_access_token)
     assert response.status_code == 401
+
+
+def test_sign_in_page_available(client):
+    response = client.get(reverse("supabase_signin"))
+    assert response.status_code == 200

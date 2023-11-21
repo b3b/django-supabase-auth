@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Supabase usage example{% endblock title %}
+{% block breadcrumbs %}{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
+{% block extrahead %}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script
+    src="{% static 'supabase_signin.js' %}"
+    data-supabase-url="{{ supabase_url }}"
+    data-supabase-key="{{ supabase_key }}"
+    >
+  </script>
+{% endblock %}
+{% block branding %}
+<div id="site-name">Supabase Sign In example</div>
+{% include "admin/color_theme_toggle.html" %}
+{% endblock %}
+
+{% block messages %}
+<ul class="messagelist">
+  {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+  {% endfor %}
+</ul>
+{% endblock messages %}
+
+{% block content %}
+
+<div class="sign-in hidden">
+        <fieldset class="module">
+          <h2>Sign in with Supabase Magic Link</h2>
+          <label for="id_email">Email:</label><input type="email" name="email" id="id_email" placeholder="Enter your email">
+          <input type="submit" value="Sign in using Magic Link" class="default" onclick="signInOtp()">
+        </fieldset>
+        <fieldset class="module">
+          <h2>Sign in a with OAuth</h2>
+          <input type="submit" value="Sign in using GitHub" class="default" onclick="signInGithub()">
+        </fieldset>
+</div>
+
+<div class="sign-out hidden">
+    <fieldset class="module profile">
+      <h2>Supabase user information received from the authenticated Django DRF endpoint</h2>
+      <pre id="id_user"><code></code></pre>
+    </fieldset>
+  <div class="submit-row">
+    <input type="submit" value= "Sign out" class="default" onclick="signOut()">
+  </div>
+</div>
+
+{% endblock content %}

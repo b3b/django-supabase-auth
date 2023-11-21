@@ -26,6 +26,8 @@ jobs:
           pip install tox tox-gh-actions
       - name: Test with tox
         env:
+          SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
           SUPABASE_HOST: ${{ secrets.SUPABASE_HOST }}
           SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         run: tox
