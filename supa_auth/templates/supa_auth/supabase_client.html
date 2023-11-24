@@ -1,0 +1,8 @@
+{% load static %}
+<script src="{{ supabase_script_url }}"></script>
+<script>
+var supabase = supabase.createClient(
+    "{{ supabase_url }}",
+    "{{ supabase_key }}",
+);
+</script>

@@ -9,6 +9,8 @@ env.read_env()
 
 def pytest_configure():
     settings.configure(
+        SUPABASE_URL=env("SUPABASE_URL"),
+        SUPABASE_API_KEY=env("SUPABASE_API_KEY"),
         DATABASES={
             "default": {
                 "ENGINE": "supa_auth",
@@ -40,6 +42,20 @@ def pytest_configure():
             "SIGNING_KEY": "test",
             "VERIFYING_KEY": "test",
         },
+        TEMPLATES=[
+            {
+                "BACKEND": "django.template.backends.django.DjangoTemplates",
+                "APP_DIRS": True,
+                "OPTIONS": {
+                    "context_processors": [
+                        "django.template.context_processors.debug",
+                        "django.template.context_processors.request",
+                        "django.contrib.auth.context_processors.auth",
+                        "django.contrib.messages.context_processors.messages",
+                    ],
+                },
+            },
+        ],
         TIME_ZONE="UTC",
         USE_I18N=True,
         USE_TZ=True,
