@@ -1,7 +1,6 @@
 import logging
 
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.contrib.auth import login as auth_login
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,9 +8,20 @@ from rest_framework.response import Response
 logger = logging.getLogger(__name__)
 
 
-@login_required
-def login_required_view(request):
-    return HttpResponse(f"{request.user.pk}")
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def login_with_jwt(request):
+    """Exchange the Supabase access token for a Django session ID cookie.
+    This endpoint expects a Supabase access token to be sent
+    in the Authorization header.
+    Upon successful authentication, it creates a Django session
+    for the authenticated user.
+
+    :param request: An HTTP request object containing the JWT token in the headers.
+    :return: An empty response indicating the success of the authentication process.
+    """
+    auth_login(request, request.user)
+    return Response()
 
 
 @api_view(["GET"])

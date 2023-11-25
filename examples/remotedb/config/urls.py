@@ -4,6 +4,6 @@ from django.urls import path
 from testapp import views
 
 urlpatterns = (
-    path("login_required/", views.login_required_view, name="django_login_required"),
+    path("session/", views.login_with_jwt, name="login_with_jwt"),
     path("admin/", admin.site.urls),
 )
