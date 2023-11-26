@@ -1,0 +1,27 @@
+{% extends "admin/login.html" %}
+{% load static i18n supa_auth %}
+
+{% block title %}{% translate 'User profile' %}{% endblock title %}
+
+{% block branding %}
+<div id="site-name">{% translate 'User profile' %}</div>
+{% include "admin/color_theme_toggle.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+  <h1>{% translate 'Welcome,' %} <strong>{{user.profile}}</strong>!</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save">
+  </form>
+
+  <form method="post" action="{% url 'rest_framework:logout' %}">
+    {% csrf_token %}
+    <input type="submit" value="{% translate 'Sign Out' %}" style="float: right"></input>
+  </form>
+
+</div>
+{% endblock content %}

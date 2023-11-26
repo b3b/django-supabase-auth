@@ -1,9 +1,13 @@
 import logging
 
 from django.contrib.auth import login as auth_login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import UpdateView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from .models import Profile
 
 logger = logging.getLogger(__name__)
 
@@ -38,3 +42,19 @@ def authenticated_view(request):
     logger.info("authenticated_view user: %s", request.user.__dict__)
     user = request.user
     return Response({"id": user.id, "payload": request.user.token.payload})
+
+
+class ProfileView(LoginRequiredMixin, UpdateView):
+    """View to display and update the authenticated user profile."""
+
+    template_name = "profile.html"
+    model = Profile
+    fields = ("preferred_username",)
+    success_url = "."
+
+    def get_object(self, queryset=None) -> Profile:
+        """Retrieves the user's profile.
+        Creates a new profile if no profile exists for the user.
+        """
+        obj, _ = self.model.objects.get_or_create(user=self.request.user)
+        return obj

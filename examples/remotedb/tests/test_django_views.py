@@ -1,6 +1,7 @@
+import pytest
 from django.urls import reverse
 
-from supa_auth.tests.factories import UserFactory
+from .factories import ProfileFactory, UserFactory
 
 
 def perform_authenticated_reqest(client, token):
@@ -10,7 +11,7 @@ def perform_authenticated_reqest(client, token):
 
 
 def test_login_required_passed(db, client):
-    user = UserFactory.create(password="1234")
+    user = UserFactory.create()
     client.force_login(user)
 
     response = client.post(reverse("login_with_jwt"))
@@ -48,3 +49,37 @@ def test_login_required_forbidden(db, client):
 
     assert response.status_code == 401
     assert not response.wsgi_request.user.is_authenticated
+
+
+def test_profile_created(db, client):
+    user = UserFactory.create()
+    client.force_login(user)
+    user.refresh_from_db()
+
+    with pytest.raises(user.__class__.profile.RelatedObjectDoesNotExist):
+        user.profile
+
+    response = client.post(reverse("profile"))
+
+    assert response.status_code == 302
+    assert response.url == "."
+
+    user.refresh_from_db()
+    assert user.profile.preferred_username is None
+
+
+def test_profile_updated(db, client):
+    profile = ProfileFactory.create()
+    client.force_login(profile.user)
+
+    assert profile.preferred_username != "username_updated"
+
+    response = client.post(
+        reverse("profile"), data={"preferred_username": "username_updated"}
+    )
+
+    assert response.status_code == 302
+    assert response.url == "."
+
+    profile.refresh_from_db()
+    assert profile.preferred_username == "username_updated"
