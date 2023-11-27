@@ -44,18 +44,21 @@ database = [
   "psycopg2-binary", 
 ]
 dev = [
-  "supa_auth[database]",
   "black>=22.3.0",
   "environs",
   "factory-boy",  
   "pylint",
+  "pylint-django",
   "pytest",
   "pytest-django",
   "pytest-env",
   "pytest-mock",
-  "ruff",  
+  "requests",
+  "requests-toolbelt",
+  "ruff",
+  "setuptools",
   "tox",  
-  "isort",  
+  "isort",
 ]
 
 [tool.setuptools]

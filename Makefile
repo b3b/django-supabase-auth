@@ -13,9 +13,9 @@ pip-install: pip-tools
 	-r requirements/dev.txt
 
 pip-compile: pip-tools
-	@rm -f requirements*.txt
-	@pip-compile requirements/base.in
-	@pip-compile requirements/dev.in
+	@rm -f requirements/*.txt
+	@pip-compile --config=pyproject.toml --strip-extras --extra database -o requirements/base.txt
+	@pip-compile --config=pyproject.toml --strip-extras --allow-unsafe --extra database,dev -o requirements/dev.txt
 
 pip-sync: pip-tools
 	@pip-sync requirements/*.txt
