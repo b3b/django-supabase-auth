@@ -1,3 +1,4 @@
+import pytest
 from django.conf import settings
 from environs import Env
 
@@ -60,3 +61,12 @@ def pytest_configure():
         USE_I18N=True,
         USE_TZ=True,
     )
+
+
+def pytest_runtest_setup(item):
+    if item.config.getoption("--reuse-db"):
+        settings.DATABASES["default"]["TEST"]["NAME"] = "postgres"
+        if "livedb" not in item.keywords:
+            pytest.skip("test should no run on live database")
+    elif "livedb" in item.keywords:
+        pytest.skip("test on live database")
