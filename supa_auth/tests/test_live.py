@@ -1,11 +1,13 @@
-"""Tests that are using Supabase API.
-"""
+"""Tests that are using Supabase API and the default database ("postgres")."""
 # pylint: disable=no-member
 import pytest
 from django.conf import settings
+from django.utils import timezone
 from requests_toolbelt import sessions
 
 from supa_auth.models import SupaUser
+
+from .utils import dict_diff, sql_select_to_dict
 
 
 @pytest.fixture
@@ -84,3 +86,58 @@ def test_wrong_password_access_prohibited_after_signup(
         json={"email": live_user_credentials["email"], "password": "wrong-password"},
     )
     assert response.status_code == 400
+
+
+@pytest.mark.livedb
+@pytest.mark.django_db(transaction=True)
+def test_access_granted_afrer_create_user(
+    delete_live_user, live_user_credentials, supa_client
+):
+    SupaUser.objects.create_user(**live_user_credentials)
+    response = supa_client.post(
+        "/auth/v1/token?grant_type=password", json=live_user_credentials
+    )
+    response.raise_for_status()
+
+
+@pytest.mark.livedb
+@pytest.mark.django_db(transaction=True)
+def test_diff_supabase_signup_and_django_create_user(
+    delete_live_user, live_user_credentials, supa_client
+):
+    """
+    Test that the database representation of the user created by
+    the Supabase signup API and the one created by Django `create_user` are consistent.
+    """
+    email = live_user_credentials["email"]
+    response = supa_client.post("/auth/v1/signup", json=live_user_credentials)
+    response.raise_for_status()
+
+    u1 = sql_select_to_dict(f"select * from users where email='{email}';")
+
+    SupaUser.objects.filter(email=email).delete()
+
+    SupaUser.objects.create_user(last_login=timezone.now(), **live_user_credentials)
+
+    u2 = sql_select_to_dict(f"select * from users where email='{email}';")
+
+    # Ensure that the types of field values in both user dictionaries are the same
+    assert not dict_diff(
+        {k: type(v) for k, v in u1.items()}, {k: type(v) for k, v in u2.items()}
+    )
+
+    # Check if there are any differences in values of fields,
+    # except for the expectedly different values
+    assert not dict_diff(
+        u1,
+        u2,
+        ignored_fields=(
+            "confirmed_at",
+            "created_at",
+            "email_confirmed_at",
+            "encrypted_password",
+            "id",
+            "last_sign_in_at",
+            "updated_at",
+        ),
+    )

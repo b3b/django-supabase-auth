@@ -183,11 +183,22 @@ class SupaUser(AbstractBaseUser, PermissionsMixin):
     email_confirmed_at = models.DateTimeField(blank=True, null=True, default=None)
     phone_confirmed_at = models.DateTimeField(blank=True, null=True, default=None)
 
+    confirmation_token = models.CharField(
+        max_length=255, blank=True, null=True, default=""
+    )
+    recovery_token = models.CharField(max_length=255, blank=True, null=True, default="")
+
+    email_change = models.CharField(max_length=255, blank=True, null=True, default="")
+    email_change_token_new = models.CharField(
+        max_length=255, blank=True, null=True, default=""
+    )
+
     user_metadata = models.JSONField(
         _("user metadata"),
         blank=True,
         null=True,
         db_column="raw_user_meta_data",
+        default=dict,
         help_text=_("User-specific info. Can be modified by regular user."),
     )
     app_metadata = models.JSONField(
