@@ -5,8 +5,6 @@ from typing import Any
 from django.db.models import BooleanField, Case, Model, Q, Value, When
 from django.utils import timezone
 
-from . import settings as app_settings
-
 
 class FieldWithAnnotation(ABC):
     """Base class for custom fields with annotation functionality.
@@ -100,10 +98,6 @@ class IsActiveField(FieldWithAnnotation):
 
     This field represents the active status of the user based on certain conditions
     such as email confirmation, phone confirmation, and ban status.
-
-    When set to `True`, it sets the `banned_until` field to `None`
-    indicating an active user.
-    When set to `False`, it sets the `banned_until` field to a high future value.
     """
 
     def __init__(self):
@@ -128,4 +122,4 @@ class IsActiveField(FieldWithAnnotation):
         )
 
     def __set__(self, instance: Model, value: bool):
-        instance.banned_until = None if value else app_settings.BAN_FOREVER_TIME
+        """The field is read-only."""

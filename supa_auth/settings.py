@@ -1,8 +1,5 @@
 """'supa_auth' app settings."""
-import datetime
 import uuid
-
-from django.utils import timezone
 
 # Use separate schema for Django tables
 DEFAULT_SCHEMA = "django"
@@ -15,6 +12,5 @@ DEFAULT_AUDIENCE = "authenticated"
 DEFAULT_APP_METADATA = {"provider": "email", "providers": ["email"]}
 DEFAULT_INSTANCE_ID = uuid.UUID("00000000-0000-0000-0000-000000000000")
 DEFAULT_ROLE = "authenticated"
-BAN_FOREVER_TIME = timezone.datetime(3000, 12, 31, tzinfo=datetime.timezone.utc)
 
 SUPABASE_SCRIPT_URL = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"

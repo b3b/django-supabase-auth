@@ -108,7 +108,8 @@ def test_is_superuser_attribute_saved(db):
     assert SupaUser.objects.filter(is_superuser=False).count() == 0
 
 
-def test_user_is_active_saved(db):
+def test_user_is_active_changed_by_a_banned_until(db):
+    now = timezone.now()
     assert SupaUser.objects.filter(is_active=True).count() == 0
     assert SupaUser.objects.filter(is_active=False).count() == 0
 
@@ -117,7 +118,7 @@ def test_user_is_active_saved(db):
     assert SupaUser.objects.filter(is_active=True).count() == 1
     assert SupaUser.objects.filter(is_active=False).count() == 0
 
-    user.is_active = False
+    user.banned_until = now + timezone.timedelta(days=1)
     assert not user.is_active
     assert SupaUser.objects.filter(is_active=True).count() == 1
     assert SupaUser.objects.filter(is_active=False).count() == 0
@@ -128,6 +129,12 @@ def test_user_is_active_saved(db):
 
     user = SupaUser.objects.get()
     assert not user.is_active
+
+    user.banned_until = now
+    user.save()
+    assert user.is_active
+    assert SupaUser.objects.filter(is_active=True).count() == 0
+    assert SupaUser.objects.filter(is_active=False).count() == 1
 
 
 def test_user_group_added(db):
