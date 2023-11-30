@@ -27,3 +27,16 @@ def test_encrypted_password_differs_from_bcrypt_hasher_only_by_prefix():
     assert BCryptPasswordHasher().encode(
         password, salt
     ) == "bcrypt$" + SupabasePasswordHasher().encode(password, salt)
+
+
+def test_password_decoded(valid_password_hash):
+    summary = SupabasePasswordHasher().decode(valid_password_hash)
+    assert summary["algorithm"] == ""
+    assert summary["checksum"] == "PYiRqGClm3h9fVaivzV1f26pFDowYYO"
+
+
+def test_summary_of_encoded_password(valid_password_hash):
+    summary = SupabasePasswordHasher().safe_summary(valid_password_hash)
+    assert summary["checksum"]
+    assert summary["algorithm"] == ""
+    assert summary["checksum"].endswith("***")

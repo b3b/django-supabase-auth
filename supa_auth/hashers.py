@@ -64,3 +64,10 @@ class SupabasePasswordHasher(BCryptPasswordHasher):
             raise ValueError("Unexpected password encoding format.")
         # remove the extra "$" starting character
         return encoded[1:]
+
+    def decode(self, encoded):
+        """Split an encoded hash and generate a summary."""
+        if not encoded.startswith("$$"):
+            # Convert to Django format
+            encoded = f"${encoded}"
+        return super().decode(encoded)
