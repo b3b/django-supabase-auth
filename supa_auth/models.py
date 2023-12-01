@@ -70,6 +70,9 @@ class UserGroup(models.Model):
         app_label = "supa_auth"
         db_table = "auth_user_groups"
 
+    def __str__(self):
+        return f"{self.user}:{self.group}"
+
 
 class UserPermission(models.Model):
     user = models.ForeignKey("supa_auth.SupaUser", on_delete=models.CASCADE)
@@ -78,6 +81,9 @@ class UserPermission(models.Model):
     class Meta:
         app_label = "supa_auth"
         db_table = "auth_user_permissions"
+
+    def __str__(self):
+        return f"{self.user}:{self.permission.codename}"  # pylint: disable=no-member
 
 
 class SupabaseUserManager(UserManager):
