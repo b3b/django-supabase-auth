@@ -16,6 +16,7 @@ def pytest_configure():
             "default": {
                 "ENGINE": "supa_auth",
                 "HOST": env("SUPABASE_HOST"),
+                "USER": env("SUPABASE_USER"),
                 "PASSWORD": env("SUPABASE_PASSWORD"),
                 "OPTIONS": {
                     "sslmode": "require",
@@ -63,10 +64,20 @@ def pytest_configure():
     )
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--live-db",
+        action="store_true",
+        default=False,
+        help="Run tests that use the live ('postgres') database",
+    )
+
+
 def pytest_runtest_setup(item):
-    if item.config.getoption("--reuse-db"):
-        settings.DATABASES["default"]["TEST"]["NAME"] = "postgres"
-        if "livedb" not in item.keywords:
-            pytest.skip("test should no run on live database")
+    if item.config.getoption("--live-db"):
+        if "livedb" in item.keywords:
+            settings.DATABASES["default"]["TEST"]["NAME"] = "postgres"
+        else:
+            pytest.skip("test should not run on live database")
     elif "livedb" in item.keywords:
-        pytest.skip("test on live database")
+        pytest.skip("test should run on live database")
