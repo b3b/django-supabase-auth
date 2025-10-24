@@ -31,4 +31,5 @@ jobs:
           SUPABASE_HOST: ${{ secrets.SUPABASE_HOST }}
           SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_USER: ${{ secrets.SUPABASE_USER }}
         run: tox
