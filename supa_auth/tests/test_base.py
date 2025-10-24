@@ -80,7 +80,9 @@ def test_search_path_set(db):
     with connection.cursor() as cursor:
         cursor.execute("show search_path;")
         result = cursor.fetchone()
-        assert result[0] == "django,public,auth,extensions"
+        search_path = result[0].split(",")
+        expected_path = ["django", "public", "auth", "extensions"]
+        assert [path.strip() for path in search_path] == expected_path
 
 
 def test_migrations_table_created_in_django_schema(db):
