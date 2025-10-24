@@ -49,7 +49,7 @@ class DatabaseWrapper(PostgresqlDatabaseWrapper):
         django_schema = self.settings_dict["SCHEMA"]
         return {
             "options": (
-                f"-c search_path={django_schema},public,auth,extensions "
+                f"--search_path={django_schema},public,auth,extensions "
                 f"-c tcp_keepalives_idle={app_settings.DEFAULT_KEEPALIVES_IDLE}"
             )
         }
