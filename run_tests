@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eux
 
-pytest supa_auth/tests
-pytest --live-db --no-migrations supa_auth/tests
-PYTHONPATH=. pytest examples/onlydb/tests
-PYTHONPATH=. pytest examples/localdb/tests
-PYTHONPATH=. pytest examples/remotedb/tests
+pytest --reuse-db supa_auth/tests
+pytest --reuse-db --live-db --no-migrations supa_auth/tests
+PYTHONPATH=. pytest --reuse-db examples/onlydb/tests
+PYTHONPATH=. pytest --reuse-db examples/localdb/tests
+PYTHONPATH=. pytest --reuse-db examples/remotedb/tests

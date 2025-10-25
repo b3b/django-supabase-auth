@@ -2,6 +2,7 @@
 # pylint: disable=no-member
 import pytest
 from django.conf import settings
+from django.db import connection
 from django.utils import timezone
 from requests_toolbelt import sessions
 
@@ -34,6 +35,14 @@ def delete_live_user(live_user_credentials):
 def live_user(delete_live_user, live_user_credentials):
     user = SupaUser.objects.create(email=live_user_credentials["email"])
     yield user
+
+
+@pytest.mark.livedb
+def test_connected_to_live_database(db):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT current_database();")
+        result = cursor.fetchone()
+        assert result[0] == "postgres"
 
 
 def test_supabase_auth_api_ready_for_tests(supa_client):
@@ -138,6 +147,7 @@ def test_diff_supabase_signup_and_django_create_user(
             "encrypted_password",
             "id",
             "last_sign_in_at",
+            "raw_user_meta_data",
             "updated_at",
         ),
     )

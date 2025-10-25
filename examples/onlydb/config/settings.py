@@ -5,12 +5,14 @@ from .base_settings import *  # noqa
 from .base_settings import env
 
 SUPABASE_HOST = env("SUPABASE_HOST")
+SUPABASE_USER = env("SUPABASE_USER")
 SUPABASE_PASSWORD = env("SUPABASE_PASSWORD")
 
 DATABASES = {
     "default": {
         "ENGINE": "supa_auth",
         "HOST": SUPABASE_HOST,
+        "USER": SUPABASE_USER,
         "PASSWORD": SUPABASE_PASSWORD,
         "SCHEMA": "onlydb",
         "OPTIONS": {

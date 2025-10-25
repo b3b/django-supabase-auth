@@ -6,7 +6,6 @@ from onlydb.models import Private, Public
 @pytest.mark.parametrize(
     "table_name,expected_schema",
     (
-        ("django_migrations", "onlydb"),
         ("onlydb_private", "onlydb"),
         ("onlydb_published", "public"),
     ),

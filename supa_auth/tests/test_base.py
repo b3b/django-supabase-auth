@@ -76,6 +76,13 @@ def test_connected_to_postgresql(db):
         assert result[0].startswith("PostgreSQL")
 
 
+def test_connected_to_test_database(db):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT current_database();")
+        result = cursor.fetchone()
+        assert result[0] == "test_postgres"
+
+
 def test_search_path_set(db):
     with connection.cursor() as cursor:
         cursor.execute("show search_path;")
@@ -94,4 +101,5 @@ def test_migrations_table_created_in_django_schema(db):
             )
         )
         result = cursor.fetchone()
+        assert result, "Migrations table was not created."
         assert result[0] == "django"

@@ -8,6 +8,7 @@ DATABASES = {
     "default": {
         "ENGINE": "supa_auth",
         "HOST": env("SUPABASE_HOST"),
+        "USER": env("SUPABASE_USER"),
         "PASSWORD": env("SUPABASE_PASSWORD"),
         "OPTIONS": {
             "sslmode": "require",
