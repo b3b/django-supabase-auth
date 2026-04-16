@@ -84,3 +84,37 @@ exclude = '''
 [tool.isort]
 profile = "black"
 multi_line_output = 3
+
+[tool.pytest.ini_options]
+markers = [
+  "livedb: mark a test to run on the live database when the --live-db option is set.",
+]
+
+[tool.pylint.main]
+fail-under = 10.0
+ignore = ["migrations"]
+py-version = "3.11"
+
+[tool.pylint."messages control"]
+disable = [
+  "attribute-defined-outside-init",
+  "bad-inline-option",
+  "deprecated-pragma",
+  "file-ignored",
+  "import-outside-toplevel",
+  "invalid-name",
+  "locally-disabled",
+  "missing-function-docstring",
+  "missing-module-docstring",
+  "protected-access",
+  "raw-checker-failed",
+  "redefined-outer-name",
+  "suppressed-message",
+  "too-few-public-methods",
+  "unused-argument",
+  "unused-wildcard-import",
+  "use-symbolic-message-instead",
+  "useless-suppression",
+  "wildcard-import",
+]
+enable = ["c-extension-no-member"]
