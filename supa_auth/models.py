@@ -1,4 +1,5 @@
 """'supa_auth' app models."""
+
 # pylint: disable=abstract-method,arguments-renamed,invalid-overridden-method
 # pylint: disable=missing-docstring
 import uuid

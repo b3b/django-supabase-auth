@@ -1,4 +1,5 @@
 """Tests that are using Supabase API and the default database ("postgres")."""
+
 # pylint: disable=no-member
 import pytest
 from django.conf import settings

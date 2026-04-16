@@ -1,6 +1,7 @@
 """
 Django settings for `localdb` project example.
 """
+
 from .base_settings import *  # noqa
 from .base_settings import env
 

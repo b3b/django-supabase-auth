@@ -1,4 +1,5 @@
 """'onlydb' admin site."""
+
 # pylint: disable=missing-class-docstring,no-member
 from django.contrib import admin
 from onlydb import models

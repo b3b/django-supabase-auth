@@ -1,4 +1,5 @@
 """'supa_auth' app template tags."""
+
 from django import template
 from django.conf import settings
 

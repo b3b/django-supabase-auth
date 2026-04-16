@@ -1,4 +1,5 @@
 """supa_auth.base"""
+
 from django.core.exceptions import ImproperlyConfigured
 from django.db.backends.postgresql.base import (
     DatabaseWrapper as PostgresqlDatabaseWrapper,

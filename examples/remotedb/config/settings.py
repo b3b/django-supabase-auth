@@ -1,6 +1,7 @@
 """
 Django settings for `remotedb` project example.
 """
+
 from .base_settings import *  # noqa
 from .base_settings import env
 

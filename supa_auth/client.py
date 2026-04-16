@@ -1,4 +1,5 @@
 """supa_auth.client"""
+
 from django.db.backends.postgresql.client import (
     DatabaseClient as PostgresqlDatabaseClient,
 )

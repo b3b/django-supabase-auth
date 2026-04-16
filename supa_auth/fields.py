@@ -1,4 +1,5 @@
 """supa_auth.fields"""
+
 from abc import ABC, abstractmethod
 from typing import Any
 

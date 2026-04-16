@@ -1,4 +1,5 @@
 """'onlydb' models."""
+
 # pylint: disable=missing-class-docstring,no-member
 from django.db import models
 

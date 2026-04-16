@@ -1,4 +1,5 @@
 """supa_auth.signals"""
+
 from typing import Any
 
 from django.db import connections

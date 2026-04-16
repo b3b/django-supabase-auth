@@ -6,12 +6,11 @@ build-backend = "setuptools.build_meta"
 name = "django_supabase_auth"
 description = "Django Supabase authentication."
 dependencies = [
-    "django>=3.2",
-    "djangorestframework>3.10",
-    "djangorestframework-simplejwt",
-    'tomli >= 1.1.0; python_version < "3.11"',
+    "django>=5.2.8",
+    "djangorestframework>=3.16.1",
+    "djangorestframework-simplejwt>=5.5.1",
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 readme = "README.rst"
 authors = [{name = "b3b", email = "ash.b3b@gmail.com"}]
 license = {text = "MIT"}
@@ -27,8 +26,10 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Internet :: WWW/HTTP",
 ]
@@ -44,7 +45,7 @@ database = [
   "psycopg2-binary", 
 ]
 dev = [
-  "black>=22.3.0",
+  "black>=25.11.0",
   "environs",
   "factory-boy",  
   "pylint",

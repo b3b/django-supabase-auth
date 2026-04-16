@@ -1,4 +1,5 @@
 """'supa_auth' admin site."""
+
 # pylint: disable=missing-class-docstring,no-member
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin

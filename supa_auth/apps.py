@@ -1,4 +1,5 @@
 """Django application configuration for the 'supa_auth' app."""
+
 from django.apps import AppConfig
 
 

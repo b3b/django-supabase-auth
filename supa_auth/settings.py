@@ -1,4 +1,5 @@
 """'supa_auth' app settings."""
+
 import uuid
 
 # Use separate schema for Django tables
