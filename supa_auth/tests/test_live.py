@@ -1,4 +1,4 @@
-"""Tests that are using Supabase API and the default database ("postgres")."""
+"""Tests that require the live Supabase project API and/or real postgres database."""
 
 # pylint: disable=no-member
 import pytest
@@ -10,6 +10,8 @@ from requests_toolbelt import sessions
 from supa_auth.models import SupaUser
 
 from .utils import dict_diff, sql_select_to_dict
+
+pytestmark = pytest.mark.liveproject
 
 
 @pytest.fixture
@@ -38,7 +40,6 @@ def live_user(delete_live_user, live_user_credentials):
     yield user
 
 
-@pytest.mark.livedb
 def test_connected_to_live_database(db):
     with connection.cursor() as cursor:
         cursor.execute("SELECT current_database();")
@@ -57,7 +58,6 @@ def test_supabase_auth_api_ready_for_tests(supa_client):
     assert external["github"]
 
 
-@pytest.mark.livedb
 @pytest.mark.django_db(transaction=True)
 def test_access_granted_after_signup(
     delete_live_user, live_user_credentials, supa_client
@@ -82,7 +82,6 @@ def test_access_granted_after_signup(
     response.raise_for_status()
 
 
-@pytest.mark.livedb
 @pytest.mark.django_db(transaction=True)
 def test_wrong_password_access_prohibited_after_signup(
     delete_live_user, live_user_credentials, supa_client
@@ -98,7 +97,6 @@ def test_wrong_password_access_prohibited_after_signup(
     assert response.status_code == 400
 
 
-@pytest.mark.livedb
 @pytest.mark.django_db(transaction=True)
 def test_access_granted_afrer_create_user(
     delete_live_user, live_user_credentials, supa_client
@@ -110,7 +108,6 @@ def test_access_granted_afrer_create_user(
     response.raise_for_status()
 
 
-@pytest.mark.livedb
 @pytest.mark.django_db(transaction=True)
 def test_diff_supabase_signup_and_django_create_user(
     delete_live_user, live_user_credentials, supa_client

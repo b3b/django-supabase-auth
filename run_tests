@@ -2,7 +2,7 @@
 set -eux
 
 pytest --reuse-db supa_auth/tests
-pytest --reuse-db --live-db --no-migrations supa_auth/tests
+pytest --reuse-db --live-project --no-migrations supa_auth/tests
 PYTHONPATH=. pytest --reuse-db examples/onlydb/tests
 PYTHONPATH=. pytest --reuse-db examples/localdb/tests
 PYTHONPATH=. pytest --reuse-db examples/remotedb/tests

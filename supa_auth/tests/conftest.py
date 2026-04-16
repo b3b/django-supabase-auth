@@ -66,18 +66,23 @@ def pytest_configure():
 
 def pytest_addoption(parser):
     parser.addoption(
+        "--live-project",
         "--live-db",
+        dest="live_project",
         action="store_true",
         default=False,
-        help="Run tests that use the live ('postgres') database",
+        help=(
+            "Run tests that use the live Supabase project "
+            "(real postgres database and/or Auth API)"
+        ),
     )
 
 
 def pytest_runtest_setup(item):
-    if item.config.getoption("--live-db"):
-        if "livedb" in item.keywords:
+    if item.config.getoption("live_project"):
+        if "liveproject" in item.keywords:
             settings.DATABASES["default"]["TEST"]["NAME"] = "postgres"
         else:
-            pytest.skip("test should not run on live database")
-    elif "livedb" in item.keywords:
-        pytest.skip("test should run on live database")
+            pytest.skip("test should not run against the live Supabase project")
+    elif "liveproject" in item.keywords:
+        pytest.skip("test should run against the live Supabase project")

@@ -87,7 +87,7 @@ multi_line_output = 3
 
 [tool.pytest.ini_options]
 markers = [
-  "livedb: mark a test to run on the live database when the --live-db option is set.",
+  "liveproject: mark a test to run against the live Supabase project when the --live-project option is set.",
 ]
 
 [tool.pylint.main]
